@@ -1,0 +1,10 @@
+(library
+ (name regularAutomata)
+ (libraries utils))
+
+(env
+ (dev
+  (flags
+   (:standard -w -33-37)))
+ (release
+  (ocamlopt_flags -O3)))

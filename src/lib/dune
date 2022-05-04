@@ -1,0 +1,16 @@
+(menhir
+ (flags (--explain))
+ (modules Parser))
+
+(ocamllex Lexer)
+
+(library
+ (name rat)
+ (libraries regularAutomata))
+
+(env
+ (dev
+  (flags
+   (:standard -w -27-32-34)))
+ (release
+  (ocamlopt_flags -O3)))

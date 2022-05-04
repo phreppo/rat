@@ -1,0 +1,12 @@
+(executable
+ (name RatMain)
+ (public_name rat)
+ (libraries unix rat)
+ (package rat))
+
+(env
+ (dev
+  (flags
+   (:standard -w -27-32-34)))
+ (release
+  (flags (:standard))))

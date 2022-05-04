@@ -1,0 +1,56 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "dune build",
+      "presentation": {
+        "echo": true,
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true,
+        "revealProblems": "onProblem"
+      },
+      "problemMatcher": "$ocamlc",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "test",
+      "type": "shell",
+      "command": "dune test",
+      "presentation": {
+        "echo": true,
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true,
+        "revealProblems": "onProblem"
+      },
+      "problemMatcher": "$ocamlc",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "run",
+      "type": "shell",
+      "command": "dune exec rat",
+      "problemMatcher": "$ocamlc",
+    },
+    {
+      "label": "fmt",
+      "type": "shell",
+      "command": "make fmt",
+      "presentation": {
+        "focus": true,
+        "reveal": "never"
+      }
+    }
+  ]
+}

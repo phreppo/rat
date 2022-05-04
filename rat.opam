@@ -1,0 +1,20 @@
+opam-version: "2.0"
+synopsis: "ReDoS Abstract Tester"
+description: "A regular expression denial of service attacks analyzer."
+version: "0.1"
+maintainer: "francesco.parolini.1@gmail.com"
+authors: ["Francesco Parolini"]
+homepage: "https://github.com/parof/rat"
+bug-reports: "https://github.com/parof/rat/issues"
+dev-repo: "git+https://github.com/parof/rat.git"
+license: "Apache-2.0"
+depends: [
+  "dune" {>= "2.9"}
+  "ocaml" {>= "4.13.0" & <= "4.14.0"}
+  "menhir"
+  "alcotest"
+  "odoc" {with-doc}
+]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
