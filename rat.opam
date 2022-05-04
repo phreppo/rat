@@ -7,7 +7,7 @@ authors: ["Francesco Parolini"]
 homepage: "https://github.com/parof/rat"
 bug-reports: "https://github.com/parof/rat/issues"
 dev-repo: "git+https://github.com/parof/rat.git"
-license: "Apache-2.0"
+license: "MIT"
 depends: [
   "dune" {>= "2.9"}
   "ocaml" {>= "4.13.0" & <= "4.14.0"}
