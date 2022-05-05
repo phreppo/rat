@@ -6,7 +6,7 @@
   <img src="img/example.png">
 </p>
 
-`rat` is a *sound* tool to detect
+`rat` is a *sound* tool to detect exponential
 [Regular Expression Denial of Service](https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS) (ReDoS) attacks.
 Since the algoirthm is proved to be sound, the tool cannot raise false
 negatives.
