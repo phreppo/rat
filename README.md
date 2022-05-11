@@ -1,4 +1,4 @@
-# rat: ReDoS Abstract Tester 🐁
+# rat - ReDoS Abstract Tester 🐁
 
 ![tests](https://github.com/parof/rat/actions/workflows/test.yml/badge.svg)
 
