@@ -15,7 +15,8 @@ This means that if `rat` determines that a regular expression is safe, it is
 Furthermore, `rat` takes advantage of efficient data structures to be
 particularly fast.
 
-*The paper about rat will be available soon.*
+The paper is available [here](https://link.springer.com/chapter/10.1007/978-3-031-10363-6_6).
+The preprint PDF versione is [here](https://parof.github.io/assets/pdfs/Parolini_ReDoS_Static_Analysis_Preprint.pdf).
 
 
 ## Build, Install and Run
