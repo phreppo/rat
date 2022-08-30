@@ -1,0 +1,3 @@
+make/make --dry-run --always-make --keep-going --print-directory
+/bin/sh: 1: make/make: not found
+

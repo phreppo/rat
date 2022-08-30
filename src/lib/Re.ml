@@ -45,29 +45,29 @@ let rec compare e1 e2 =
   | Char _, _ -> -1
   | _, Char _ -> 1
   | Concat (e1, e2), Concat (e3, e4) ->
-    let comp_e1_e3 = compare e1 e3 in
-    if comp_e1_e3 <> 0 then comp_e1_e3 else compare e2 e4
+      let comp_e1_e3 = compare e1 e3 in
+      if comp_e1_e3 <> 0 then comp_e1_e3 else compare e2 e4
   | Concat _, _ -> -1
   | _, Concat _ -> 1
   | Choice (e1, e2), Choice (e3, e4) ->
-    let comp_e1_e3 = compare e1 e3 in
-    if comp_e1_e3 <> 0 then comp_e1_e3 else compare e2 e4
+      let comp_e1_e3 = compare e1 e3 in
+      if comp_e1_e3 <> 0 then comp_e1_e3 else compare e2 e4
   | Choice _, _ -> -1
   | _, Choice _ -> 1
   | Star (b1, e1), Star (b2, e2) ->
-    if Bool.compare b1 b2 <> 0 then Bool.compare b1 b2 else compare e1 e2
+      if Bool.compare b1 b2 <> 0 then Bool.compare b1 b2 else compare e1 e2
 
 let rec to_string = function
   | Epsilon -> U.yellow ^ "ε" ^ U.reset
   | Char c -> Charset.to_string c
   | Concat (a, b) -> to_string a ^ to_string b
   | Choice (a, b) ->
-    U.blue ^ "(" ^ U.reset ^ to_string a ^ U.blue ^ ")|(" ^ U.reset
-    ^ to_string b ^ U.blue ^ ")" ^ U.reset
+      U.blue ^ "(" ^ U.reset ^ to_string a ^ U.blue ^ ")|(" ^ U.reset
+      ^ to_string b ^ U.blue ^ ")" ^ U.reset
   | Star (true, a) ->
-    U.green ^ "[" ^ U.reset ^ to_string a ^ U.green ^ "]*" ^ U.reset
+      U.green ^ "[" ^ U.reset ^ to_string a ^ U.green ^ "]*" ^ U.reset
   | Star (false, a) ->
-    U.red ^ "~[" ^ U.reset ^ to_string a ^ U.red ^ "]*" ^ U.reset
+      U.red ^ "~[" ^ U.reset ^ to_string a ^ U.red ^ "]*" ^ U.reset
 
 let rec refesh_stars = function
   | Epsilon -> eps
@@ -102,10 +102,10 @@ let rec case_insensitive = function
 
 module ReSet = struct
   include Set.Make (struct
-      type nonrec t = t
+    type nonrec t = t
 
-      let compare = compare
-    end)
+    let compare = compare
+  end)
 
   let to_string rset =
     let rstring = elements rset |> List.map to_string |> String.concat ", " in

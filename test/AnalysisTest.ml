@@ -1,5 +1,4 @@
 open Rat
-
 open Analysis
 
 let attack_lang_from prefix pump suffix =
@@ -527,13 +526,13 @@ let make_test ~semantics couple =
   let regex = Parser.main Lexer.token (Lexing.from_string src) in
   match ParserRe.to_re ~semantics regex with
   | Error e ->
-    ParserRe.report_conversion_error Format.err_formatter e;
-    Alcotest.fail "Parsing of regex was not supposed to fail"
+      ParserRe.report_conversion_error Format.err_formatter e;
+      Alcotest.fail "Parsing of regex was not supposed to fail"
   | Ok regex ->
-    let attack_families = analyze regex in
-    let attack_lang = AttackFamilySet.to_lang attack_families in
-    Alcotest.test_case src `Quick (fun _ ->
-        Alcotest.check testable_extre src expected_attack_language attack_lang)
+      let attack_families = analyze regex in
+      let attack_lang = AttackFamilySet.to_lang attack_families in
+      Alcotest.test_case src `Quick (fun _ ->
+          Alcotest.check testable_extre src expected_attack_language attack_lang)
 
 let () =
   let open Alcotest in

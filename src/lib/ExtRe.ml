@@ -335,14 +335,6 @@ let get_word re predicate =
   | Some w -> List.to_seq w |> String.of_seq |> Option.some
   | None -> None
 
-(** This at some points should be used to properly fold alternatives, because
-    the regular expressions built using the {!RegularAutomata} package do not
-    support charsets in the letters. *)
-let fold_alternatives re =
-  failwith
-    "you are in extre.ml and you are writing the simplify function properly to \
-     make the output of the analysis much more readable."
-
 let rec aut_re_to_ext_re (re : Aut.regexp) =
   match re with
   | L c -> Char (Charset.singleton c)

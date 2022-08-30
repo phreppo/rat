@@ -24,7 +24,7 @@ module AttackFamily = struct
     ^ U.blue_str " suffix: "
     ^ ExtRe.to_string attack.suffix
 
-  let to_lang  attack_family =
+  let to_lang attack_family =
     let prefix_pump = ExtRe.concat attack_family.prefix attack_family.pump in
     let prefix_pump_suffix = ExtRe.concat prefix_pump attack_family.suffix in
     prefix_pump_suffix
@@ -87,8 +87,7 @@ module AttackFamilySet = struct
 
   let to_lang attack_family_set =
     fold
-      (fun elem acc ->
-         ExtRe.alternative (AttackFamily.to_lang elem) acc)
+      (fun elem acc -> ExtRe.alternative (AttackFamily.to_lang elem) acc)
       attack_family_set ExtRe.empty
 
   let remove_empty = filter (fun attack -> not (AttackFamily.is_empty attack))
@@ -100,7 +99,7 @@ module AttackFamilySet = struct
     match choose_opt not_empty_attack_family_set with
     | None -> None
     | Some attack_family ->
-      ExploitString.from_attack_family attack_family predicate
+        ExploitString.from_attack_family attack_family predicate
 
   let simplify = map AttackFamily.simplify
 end
@@ -109,7 +108,7 @@ let rec to_extended_regex = function
   | Epsilon -> ExtRe.eps
   | Char c -> ExtRe.chr c
   | Choice (l, r) ->
-    ExtRe.alternative (to_extended_regex l) (to_extended_regex r)
+      ExtRe.alternative (to_extended_regex l) (to_extended_regex r)
   | Concat (l, r) -> ExtRe.concat (to_extended_regex l) (to_extended_regex r)
   | Star (_, e) -> ExtRe.star (to_extended_regex e)
 
@@ -124,14 +123,14 @@ let common_words_in_leaves left_leaves right_leaves =
   let cartesian =
     U.cartesian (RS.elements left_leaves) (RS.elements right_leaves)
     |> List.map (fun el ->
-        (to_extended_regex (fst el), to_extended_regex (snd el)))
+           (to_extended_regex (fst el), to_extended_regex (snd el)))
   in
   List.fold_left
     (fun acc elem ->
-       let left, right = elem in
-       let lr_intersection = ExtRe.inter left right in
-       if ExtRe.lang_empty lr_intersection then acc
-       else ExtRe.alternative acc lr_intersection)
+      let left, right = elem in
+      let lr_intersection = ExtRe.inter left right in
+      if ExtRe.lang_empty lr_intersection then acc
+      else ExtRe.alternative acc lr_intersection)
     ExtRe.empty cartesian
 
 (** [m2 e] returns the language of words that can possibly be matched in at
@@ -156,8 +155,8 @@ and m2_already_explored e explored pref =
 and m2_new_expression e explored pref =
   match next e with
   | Match (a, e') ->
-    let new_pref = ExtRe.concat pref (ExtRe.chr a) in
-    m2_rec e' explored new_pref
+      let new_pref = ExtRe.concat pref (ExtRe.chr a) in
+      m2_rec e' explored new_pref
   | LeftOrRight (l, r) -> m2_choice l r explored pref
   | ExpandOrNot (l, r) -> m2_choice l r (RS.add e explored) pref
   | None -> ExtRe.empty
