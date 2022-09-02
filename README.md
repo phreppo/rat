@@ -1,3 +1,4 @@
+
 # rat - ReDoS Abstract Tester 🐁
 
 ![tests](https://github.com/parof/rat/actions/workflows/test.yml/badge.svg)
@@ -8,7 +9,7 @@
 
 `rat` is a *sound* tool to detect exponential
 [Regular Expression Denial of Service](https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS) (ReDoS) attacks.
-Since the algoirthm is proved to be sound, the tool cannot raise false
+Since the algorithm is proved to be sound, the tool cannot raise false
 negatives.
 This means that if `rat` determines that a regular expression is safe, it is
 *impossible* for it to be exploited by an attacker.
@@ -16,7 +17,7 @@ Furthermore, `rat` takes advantage of efficient data structures to be
 particularly fast.
 
 The paper is available [here](https://link.springer.com/chapter/10.1007/978-3-031-10363-6_6).
-The preprint PDF versione is [here](https://parof.github.io/assets/pdfs/Parolini_ReDoS_Static_Analysis_Preprint.pdf).
+The preprint PDF version is [here](https://parof.github.io/assets/pdfs/Parolini_ReDoS_Static_Analysis_Preprint.pdf).
 
 
 ## Build, Install and Run
@@ -97,7 +98,7 @@ difficult to read it.
 
 ## Limitations
 
-`rat` cannot analyze a wide variaty of non-regular constructs in regular
+`rat` cannot analyze a wide variety of non-regular constructs in regular
 expressions, most notably *backreferences* and *lookarounds*.
 Some non-regular constructs, such as `$`, are supported in a limited form.
 Future improvements might fix this.
