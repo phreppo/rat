@@ -1,7 +1,7 @@
 (** Extended regualar expressions. *)
 type t =
   | Empty
-  | Eps
+  | Epsilon
   | Char of Charset.t
   | Concat of t list (* minimum two elements. *)
   | Alternative of t list (* sorted, with minimum two elements. *)
@@ -14,9 +14,9 @@ let rec compare re1 re2 =
   | Empty, Empty -> 0
   | Empty, _ -> -1
   | _, Empty -> 1
-  | Eps, Eps -> 0
-  | Eps, _ -> -1
-  | _, Eps -> 1
+  | Epsilon, Epsilon -> 0
+  | Epsilon, _ -> -1
+  | _, Epsilon -> 1
   | Char chrs1, Char chrs2 -> Charset.compare chrs1 chrs2
   | Char _, _ -> -1
   | _, Char _ -> 1
@@ -59,7 +59,7 @@ let neg_str_repr = "\xc2\xac"
 let rec to_string re =
   match re with
   | Empty -> empty_str_repr
-  | Eps -> epsilon_str_repr
+  | Epsilon -> epsilon_str_repr
   | Char a -> Charset.to_string a
   | Concat rs -> list_of_res_to_string "" rs
   | Star r -> "(" ^ to_string r ^ ")*"
@@ -76,7 +76,7 @@ let pp fmt re = Format.pp_print_string fmt (to_string re)
 (** {1 Smart Constructors.} *)
 
 let empty = Empty
-let eps = Eps
+let eps = Epsilon
 let chr c = if Charset.is_empty c then Empty else Char c
 
 let inter re1 re2 =
@@ -113,16 +113,16 @@ let concat re1 re2 =
   | Concat rs, Concat ts -> Concat (rs @ ts)
   | Empty, _ -> Empty
   | _, Empty -> Empty
-  | Eps, _ -> re2
-  | _, Eps -> re1
+  | Epsilon, _ -> re2
+  | _, Epsilon -> re1
   | Concat re1', _ -> Concat (re1' @ [ re2 ])
   | _, Concat re2' -> Concat (re1 :: re2')
   | _ -> Concat [ re1; re2 ]
 
 let star = function
   | Star r' -> Star r'
-  | Eps -> Eps
-  | Empty -> Eps (* The star of empty is epsilon. *)
+  | Epsilon -> Epsilon
+  | Empty -> Epsilon (* The star of empty is epsilon. *)
   | _ as r -> Star r
 
 let plus re = concat re (star re)
@@ -143,7 +143,7 @@ let compl = function
 (** [nullable re] is [true] iff [re] recognizes the empty word. *)
 let rec nullable = function
   | Empty -> false
-  | Eps -> true
+  | Epsilon -> true
   | Char _ -> false
   | Star _ -> true
   | Concat res -> List.for_all nullable res
@@ -206,8 +206,8 @@ end
 
 (** [derivative a re] is the derivative of [re] with respect to the symbols [a]. *)
 let rec derivative a = function
-  | Eps -> Empty
-  | Char b -> if Charset.subset a b then Eps else Empty
+  | Epsilon -> Empty
+  | Char b -> if Charset.subset a b then Epsilon else Empty
   | Empty -> Empty
   | Concat [] -> failwith "internal, empty concatenation in d"
   | Concat [ r ] -> derivative a r
@@ -236,7 +236,7 @@ let rec derivative a = function
 
 let rec range = function
   | Empty -> CharsetSet.any_char_singleton
-  | Eps -> CharsetSet.any_char_singleton
+  | Epsilon -> CharsetSet.any_char_singleton
   | Char a -> CharsetSet.partition a
   | Concat [] -> CharsetSet.any_char_singleton
   | Concat (r :: rs) ->
@@ -303,7 +303,7 @@ let algebra = Aut.Algebra.of_list Utility.all_chars
 let rec to_dfa (re : t) : Aut.dfa =
   match re with
   | Empty -> Aut.N |> Aut.automata_of_regexp algebra
-  | Eps -> Aut.E |> Aut.automata_of_regexp algebra
+  | Epsilon -> Aut.E |> Aut.automata_of_regexp algebra
   | Char chars -> chars_to_dfa chars
   | Concat rs -> combine Aut.concat rs
   | Alternative rs -> combine Aut.join rs

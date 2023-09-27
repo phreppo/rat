@@ -8,7 +8,7 @@ type body =
   | Epsilon
   | Char of Charset.t
   | Concat of body * body
-  | Choice of body * body
+  | Alternative of body * body
   | Star of body
   | Backreference of int
   | Utf8
@@ -21,7 +21,7 @@ type t = body * flags
 let eps = Epsilon
 let ch c = Char c
 let from_char c = Char (Charset.singleton c)
-let choice e1 e2 = Choice (e1, e2)
+let choice e1 e2 = Alternative (e1, e2)
 let star e1 = match e1 with Epsilon -> Epsilon | _ -> Star e1
 
 let concat e1 e2 =
@@ -105,7 +105,7 @@ type semantics = Match | Fullmatch
     [last_construct_blocks_universal_language "$a*"] is [false]. *)
 let rec last_construct_blocks_universal_language = function
   | Dollar | WordBoundary | EndOfString -> true
-  | Epsilon | Char _ | Choice _ | Star _ | Backreference _ | Utf8 -> false
+  | Epsilon | Char _ | Alternative _ | Star _ | Backreference _ | Utf8 -> false
   | Concat (_, re2) -> last_construct_blocks_universal_language re2
 
 (** [remove_some_advanced_features re] removes from [re] some advanced features,
@@ -120,7 +120,7 @@ let remove_some_advanced_features input : (body, conversion_error) result =
         let* re1' = remove_advanced_features_rec false re1 in
         let* re2' = remove_advanced_features_rec is_last re2 in
         Ok (concat re1' re2')
-    | Choice (re1, re2) ->
+    | Alternative (re1, re2) ->
         let* re1' = remove_advanced_features_rec false re1 in
         let* re2' = remove_advanced_features_rec false re2 in
         Ok (choice re1' re2')
@@ -163,7 +163,7 @@ let rec to_re_body input : (Re.t, conversion_error) result =
       let* r1' = to_re_body r1 in
       let* r2' = to_re_body r2 in
       Ok (Re.concat r1' r2')
-  | Choice (r1, r2) ->
+  | Alternative (r1, r2) ->
       let* r1' = to_re_body r1 in
       let* r2' = to_re_body r2 in
       Ok (Re.choice r1' r2')

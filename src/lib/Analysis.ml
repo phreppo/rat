@@ -104,13 +104,13 @@ module AttackFamilySet = struct
   let simplify = map AttackFamily.simplify
 end
 
-let rec to_extended_regex = function
+let rec to_ext_regex = function
   | Epsilon -> ExtRe.eps
   | Char c -> ExtRe.chr c
-  | Choice (l, r) ->
-      ExtRe.alternative (to_extended_regex l) (to_extended_regex r)
-  | Concat (l, r) -> ExtRe.concat (to_extended_regex l) (to_extended_regex r)
-  | Star (_, e) -> ExtRe.star (to_extended_regex e)
+  | Alternative (l, r) ->
+      ExtRe.alternative (to_ext_regex l) (to_ext_regex r)
+  | Concat (l, r) -> ExtRe.concat (to_ext_regex l) (to_ext_regex r)
+  | Star (_, e) -> ExtRe.star (to_ext_regex e)
 
 let rec leaves e =
   match next e with
@@ -123,7 +123,7 @@ let common_words_in_leaves left_leaves right_leaves =
   let cartesian =
     U.cartesian (RS.elements left_leaves) (RS.elements right_leaves)
     |> List.map (fun el ->
-           (to_extended_regex (fst el), to_extended_regex (snd el)))
+           (to_ext_regex (fst el), to_ext_regex (snd el)))
   in
   List.fold_left
     (fun acc elem ->
@@ -149,7 +149,7 @@ and m2_already_explored e explored pref =
      occur only for kleene stars to avoid infinite loops. *)
   let tail = tail e in
   let head = head e in
-  let pref = ExtRe.concat pref (to_extended_regex head) in
+  let pref = ExtRe.concat pref (to_ext_regex head) in
   m2_rec tail explored pref
 
 and m2_new_expression e explored pref =
@@ -170,7 +170,7 @@ and m2_choice l r explored pref =
     (ExtRe.alternative attack_left attack_right)
 
 (** [exp_attack_families r] returns the families of exponentially attack words
-    for the regex *)
+    for the regex [r]. *)
 let rec exp_attack_families r =
   exp_attack_rec ExtRe.eps ExtRe.eps r |> AttackFamilySet.remove_empty
 
@@ -178,27 +178,27 @@ and exp_attack_rec pref suff e =
   match e with
   | Epsilon -> AttackFamilySet.empty
   | Char _ -> AttackFamilySet.empty
-  | Choice (l, r) -> exp_attack_rec_choice pref suff l r
+  | Alternative (l, r) -> exp_attack_rec_alternative pref suff l r
   | Concat (l, r) -> exp_attack_rec_concat pref suff l r
   | Star (_, e') -> exp_attack_rec_star pref suff e e'
 
-and exp_attack_rec_choice pref suff l r =
+and exp_attack_rec_alternative pref suff l r =
   AttackFamilySet.union
     (exp_attack_rec pref suff l)
     (exp_attack_rec pref suff r)
 
 and exp_attack_rec_concat pref suff l r =
   AttackFamilySet.union
-    (exp_attack_rec pref (ExtRe.concat (to_extended_regex r) suff) l)
-    (exp_attack_rec (ExtRe.concat pref (to_extended_regex l)) suff r)
+    (exp_attack_rec pref (ExtRe.concat (to_ext_regex r) suff) l)
+    (exp_attack_rec (ExtRe.concat pref (to_ext_regex l)) suff r)
 
 and exp_attack_rec_star pref suff e e' =
-  let pref = ExtRe.concat pref (to_extended_regex e) in
-  let suff = ExtRe.concat (to_extended_regex e) suff in
-  let negation_suff = ExtRe.compl suff in
-  let pump = m2 (head e) in
+  let pref = ExtRe.concat pref (to_ext_regex e) in
+  let suff = ExtRe.concat (to_ext_regex e) suff in
+  let negated_suff = ExtRe.compl suff in
+  let pump = m2 e in
   let attack_family =
-    AttackFamilySet.singleton { prefix = pref; pump; suffix = negation_suff }
+    AttackFamilySet.singleton { prefix = pref; pump; suffix = negated_suff }
   in
   let attack_e' = exp_attack_rec pref suff e' in
   AttackFamilySet.union attack_family attack_e'

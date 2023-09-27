@@ -10,8 +10,8 @@ type t =
   | Epsilon
   | Char of Charset.t
   | Concat of t * t
-  | Choice of t * t
-  | Star of bool * t (* The bool represents if the star can be expanded. *)
+  | Alternative of t * t
+  | Star of bool * t (* bool is true if the star can be expanded. *)
 
 val compare : t -> t -> int
 val to_string : t -> string
