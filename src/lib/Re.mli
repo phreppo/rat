@@ -1,9 +1,7 @@
 (** Regular expressions.
 
     Regular expressions implement the traditional regexes. They support only
-    regular constructs, and they are the input of the analysis. As described in
-    the paper, they support a transition relation that describes the next state
-    in the matching engine. See the paper for further information. *)
+    regular constructs, and they are the input of the analysis. *)
 
 (** Type of the regular expressions. *)
 type t =
@@ -15,13 +13,6 @@ type t =
 
 val compare : t -> t -> int
 val to_string : t -> string
-
-(** The transition relation type. *)
-type transition =
-  | None
-  | Match of Charset.t * t
-  | LeftOrRight of t * t
-  | ExpandOrNot of t * t
 
 (** {1 Smart Constructors} *)
 
@@ -56,9 +47,6 @@ val case_insensitive : t -> t
 
 val refesh_stars : t -> t
 (** [refresh_stars re] is [re] with all stars marked as expandable. *)
-
-val next : t -> transition
-(** [next re] is the transition that [re] can perform. *)
 
 (** Set of regular expressions. *)
 module ReSet : sig

@@ -111,94 +111,81 @@ let rec to_ext_regex = function
   | Concat (l, r) -> ExtRe.concat (to_ext_regex l) (to_ext_regex r)
   | Star (_, e) -> ExtRe.star (to_ext_regex e)
 
-let rec leaves e =
-  match next e with
-  | None -> RS.empty
-  | Match _ -> RS.singleton e
-  | LeftOrRight (l, r) -> RS.union (leaves l) (leaves r)
-  | ExpandOrNot (l, r) -> RS.union (leaves l) (leaves r)
+(** [remove_eps r] returns a regular expressions [r'] that accepts the same
+    language as [r] without [Epsilon]. *)
+let rec remove_eps r =
+  match (head r, tail r) with
+  | Epsilon, _ | Star (false, _), _ -> ExtRe.empty
+  | (Char _ as a), r1 ->
+      ExtRe.concat (to_ext_regex a) (refesh_stars r1 |> to_ext_regex)
+  | Alternative (r1, r2), r3 ->
+      ExtRe.alternative
+        (remove_eps (Concat (r1, r3)))
+        (remove_eps (Concat (r2, r3)))
+  | Star (true, r1), r2 ->
+      ExtRe.alternative
+        (remove_eps (Concat (r1, Concat (Star (false, r1), r2))))
+        (remove_eps r2)
+  | Concat _, _ -> failwith "unreachable"
 
-let common_words_in_leaves left_leaves right_leaves =
-  let cartesian =
-    U.cartesian (RS.elements left_leaves) (RS.elements right_leaves)
-    |> List.map (fun el -> (to_ext_regex (fst el), to_ext_regex (snd el)))
-  in
-  List.fold_left
-    (fun acc elem ->
-      let left, right = elem in
-      let lr_intersection = ExtRe.inter left right in
-      if ExtRe.lang_empty lr_intersection then acc
-      else ExtRe.alternative acc lr_intersection)
-    ExtRe.empty cartesian
+let non_eps_iter r1 r2 = ExtRe.inter (remove_eps r1) (remove_eps r2)
 
-(** [m2 e] returns the language of words that can possibly be matched in at
-    least two ways in the expression e *)
-let rec m2 e = m2_rec e RS.empty ExtRe.eps
+(** [m2 r] returns the language of words that can possibly be matched in at
+    least two traces in the expression [r]. *)
+let rec m2 r = m2_rec r RS.empty
 
-and m2_rec e explored pref =
-  if compare e eps = 0 then ExtRe.empty else m2_not_eps e explored pref
-
-and m2_not_eps e explored pref =
-  if RS.mem e explored then m2_already_explored e explored pref
-  else m2_new_expression e explored pref
-
-and m2_already_explored e explored pref =
-  (* If we have already explored the expression e we can prune it. This will
-     occur only for kleene stars to avoid infinite loops. *)
-  let tail = tail e in
-  let head = head e in
-  let pref = ExtRe.concat pref (to_ext_regex head) in
-  m2_rec tail explored pref
-
-and m2_new_expression e explored pref =
-  match next e with
-  | Match (a, e') ->
-      let new_pref = ExtRe.concat pref (ExtRe.chr a) in
-      m2_rec e' explored new_pref
-  | LeftOrRight (l, r) -> m2_choice l r explored pref
-  | ExpandOrNot (l, r) -> m2_choice l r (RS.add e explored) pref
-  | None -> ExtRe.empty
-
-and m2_choice l r explored pref =
-  let attack_for_choice = common_words_in_leaves (leaves l) (leaves r) in
-  let attack_for_choice_with_pref = ExtRe.concat pref attack_for_choice in
-  let attack_left = m2_rec l explored pref in
-  let attack_right = m2_rec r explored pref in
-  ExtRe.alternative attack_for_choice_with_pref
-    (ExtRe.alternative attack_left attack_right)
+and m2_rec r explored =
+  if RS.mem r explored then ExtRe.empty
+  else
+    match (head r, tail r) with
+    | Epsilon, _ | Star (false, _), _ -> ExtRe.empty
+    | (Char _ as a), r1 ->
+        ExtRe.concat (to_ext_regex a) (m2_rec (Re.refesh_stars r1) explored)
+    | Alternative (r1, r2), r3 ->
+        let inter = non_eps_iter (Concat (r1, r3)) (Concat (r2, r3)) in
+        let left = m2_rec (Concat (r1, r3)) explored in
+        let right = m2_rec (Concat (r2, r3)) explored in
+        ExtRe.alternative inter (ExtRe.alternative left right)
+    | (Star (true, r1) as r1_star), r2 ->
+        let expanded = Concat (r1, Concat (Star (false, r1), r2)) in
+        let inter = non_eps_iter expanded r2 in
+        let left = m2_rec expanded (RS.add r explored) in
+        let right = ExtRe.concat (to_ext_regex r1_star) (m2_rec r2 explored) in
+        ExtRe.alternative inter (ExtRe.alternative left right)
+    | Concat _, _ -> failwith "unreachable"
 
 (** [exp_attack_families r] returns the families of exponentially attack words
     for the regex [r]. *)
 let rec exp_attack_families r =
   exp_attack_rec ExtRe.eps ExtRe.eps r |> AttackFamilySet.remove_empty
 
-and exp_attack_rec pref suff e =
-  match e with
+and exp_attack_rec pref suff r =
+  match r with
   | Epsilon -> AttackFamilySet.empty
   | Char _ -> AttackFamilySet.empty
-  | Alternative (l, r) -> exp_attack_rec_alternative pref suff l r
-  | Concat (l, r) -> exp_attack_rec_concat pref suff l r
-  | Star (_, e') -> exp_attack_rec_star pref suff e e'
+  | Alternative (r1, r2) -> exp_attack_rec_alternative pref suff r1 r2
+  | Concat (r1, r2) -> exp_attack_rec_concat pref suff r1 r2
+  | Star (_, r1) -> exp_attack_rec_star pref suff r r1
 
-and exp_attack_rec_alternative pref suff l r =
+and exp_attack_rec_alternative pref suff r1 r2 =
   AttackFamilySet.union
-    (exp_attack_rec pref suff l)
-    (exp_attack_rec pref suff r)
+    (exp_attack_rec pref suff r1)
+    (exp_attack_rec pref suff r2)
 
-and exp_attack_rec_concat pref suff l r =
+and exp_attack_rec_concat pref suff r1 r2 =
   AttackFamilySet.union
-    (exp_attack_rec pref (ExtRe.concat (to_ext_regex r) suff) l)
-    (exp_attack_rec (ExtRe.concat pref (to_ext_regex l)) suff r)
+    (exp_attack_rec pref (ExtRe.concat (to_ext_regex r2) suff) r1)
+    (exp_attack_rec (ExtRe.concat pref (to_ext_regex r1)) suff r2)
 
-and exp_attack_rec_star pref suff e e' =
-  let pref = ExtRe.concat pref (to_ext_regex e) in
-  let suff = ExtRe.concat (to_ext_regex e) suff in
+and exp_attack_rec_star pref suff r r1 =
+  let pref = ExtRe.concat pref (to_ext_regex r) in
+  let suff = ExtRe.concat (to_ext_regex r) suff in
   let negated_suff = ExtRe.compl suff in
-  let pump = m2 e in
+  let pump = m2 r in
   let attack_family =
     AttackFamilySet.singleton { prefix = pref; pump; suffix = negated_suff }
   in
-  let attack_e' = exp_attack_rec pref suff e' in
+  let attack_e' = exp_attack_rec pref suff r1 in
   AttackFamilySet.union attack_family attack_e'
 
 let analyze r = exp_attack_families r
