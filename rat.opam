@@ -10,7 +10,7 @@ dev-repo: "git+https://github.com/parof/rat.git"
 license: "MIT"
 depends: [
   "dune" {>= "2.9"}
-  "ocaml" {>= "4.13.0" & <= "4.14.0"}
+  "ocaml" {>= "4.13.0" & <= "4.14.1"}
   "menhir"
   "alcotest"
   "odoc" {with-doc}
