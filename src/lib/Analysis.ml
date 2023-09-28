@@ -107,8 +107,7 @@ end
 let rec to_ext_regex = function
   | Epsilon -> ExtRe.eps
   | Char c -> ExtRe.chr c
-  | Alternative (l, r) ->
-      ExtRe.alternative (to_ext_regex l) (to_ext_regex r)
+  | Alternative (l, r) -> ExtRe.alternative (to_ext_regex l) (to_ext_regex r)
   | Concat (l, r) -> ExtRe.concat (to_ext_regex l) (to_ext_regex r)
   | Star (_, e) -> ExtRe.star (to_ext_regex e)
 
@@ -122,8 +121,7 @@ let rec leaves e =
 let common_words_in_leaves left_leaves right_leaves =
   let cartesian =
     U.cartesian (RS.elements left_leaves) (RS.elements right_leaves)
-    |> List.map (fun el ->
-           (to_ext_regex (fst el), to_ext_regex (snd el)))
+    |> List.map (fun el -> (to_ext_regex (fst el), to_ext_regex (snd el)))
   in
   List.fold_left
     (fun acc elem ->
