@@ -7,12 +7,6 @@ type t =
   | Alternative of t * t
   | Star of bool * t
 
-type transition =
-  | None
-  | Match of Charset.t * t
-  | LeftOrRight of t * t
-  | ExpandOrNot of t * t
-
 let rec is_finite = function
   | Epsilon -> true
   | Char _ -> true
@@ -75,20 +69,6 @@ let rec refesh_stars = function
   | Concat (e1, e2) -> concat (refesh_stars e1) (refesh_stars e2)
   | Alternative (e1, e2) -> choice (refesh_stars e1) (refesh_stars e2)
   | Star (_, e1) -> star (refesh_stars e1)
-
-let rec next = function
-  | Epsilon -> None
-  | Char c -> Match (c, eps)
-  | Alternative (l, r) -> LeftOrRight (l, r)
-  | Star (false, _) -> None
-  | Star (true, e') -> ExpandOrNot (concat e' (star ~expandible:false e'), eps)
-  | Concat (l, r) -> (
-      match next l with
-      | None -> None
-      (* we matched => we can refresh the expandable stars *)
-      | Match (c, e1') -> Match (c, concat e1' r |> refesh_stars)
-      | LeftOrRight (l', r') -> LeftOrRight (concat l' r, concat r' r)
-      | ExpandOrNot (e1', e1'') -> ExpandOrNot (concat e1' r, concat e1'' r))
 
 let rec head e = match e with Concat (l, _) -> head l | _ -> e
 let rec tail e = match e with Concat (l, r) -> concat (tail l) r | _ -> eps
