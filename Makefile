@@ -9,7 +9,7 @@ all:
 
 .PHONY: deps
 deps: ## Install development dependencies
-	opam install -y dune-release ocamlformat utop ocaml-lsp-server
+	opam install -y dune-release ocamlformat utop
 	opam install --deps-only --with-test --with-doc -y .
 
 .PHONY: create_switch
