@@ -326,25 +326,25 @@ module Make (S : SIG.STATE) (A : SIG.COMPARABLE) = struct
       nd_algebra = u.algebra;
       nd_trans =
         (if not will_hole_be_coreachable then
-         fold_trans_nh
-           (fun (q, a, q') acc ->
-             let qq' = map q' in
-             if is_hole qq' then acc
-             else
-               let qq = map q in
-               nd_add_trans (qq, a, qq') acc)
-           u DetTrans.empty
-        else
-          StatesSet.fold
-            (fun q acc ->
-              Algebra.fold
-                (fun a acc ->
-                  let q' = delta q a u in
-                  let qq' = map q' in
-                  let qq = map q in
-                  nd_add_trans (qq, a, qq') acc)
-                u.algebra acc)
-            (get_states u) DetTrans.empty);
+           fold_trans_nh
+             (fun (q, a, q') acc ->
+               let qq' = map q' in
+               if is_hole qq' then acc
+               else
+                 let qq = map q in
+                 nd_add_trans (qq, a, qq') acc)
+             u DetTrans.empty
+         else
+           StatesSet.fold
+             (fun q acc ->
+               Algebra.fold
+                 (fun a acc ->
+                   let q' = delta q a u in
+                   let qq' = map q' in
+                   let qq = map q in
+                   nd_add_trans (qq, a, qq') acc)
+                 u.algebra acc)
+             (get_states u) DetTrans.empty);
     }
 
   let mini (u : dfa) max_split =
@@ -748,8 +748,8 @@ module Make (S : SIG.STATE) (A : SIG.COMPARABLE) = struct
         nd_states = StatesSet.union u.nd_states u'.nd_states;
         nd_init =
           (if StatesSet.is_empty (StatesSet.inter u.nd_init u.nd_finals) then
-           u.nd_init
-          else StatesSet.union u.nd_init u'.nd_init);
+             u.nd_init
+           else StatesSet.union u.nd_init u'.nd_init);
         nd_algebra = u.nd_algebra;
         nd_trans = t';
         nd_finals = u'.nd_finals;
@@ -1372,8 +1372,7 @@ module Make (S : SIG.STATE) (A : SIG.COMPARABLE) = struct
       | (p, id) :: q ->
           let trans, assoc, todo, finals =
             Algebra.fold
-              (fun l
-                   (trans, (assoc : (regexp list * state) list), todos, finals) ->
+              (fun l (trans, (assoc : (regexp list * state) list), todos, finals) ->
                 let x = derivate l p in
                 try
                   let xid = RWEQMap.find x assoc in
@@ -1404,7 +1403,7 @@ module Make (S : SIG.STATE) (A : SIG.COMPARABLE) = struct
         [ (r, init) ]
         DetTrans.empty assoc
         (if unit_function r = E then StatesSet.singleton init
-        else StatesSet.empty)
+         else StatesSet.empty)
     in
     {
       states =

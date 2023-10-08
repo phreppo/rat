@@ -106,18 +106,18 @@ and analyze_with_runtime regex =
 and print runtime attack =
   let exp_vulnerable = not (Analysis.AttackFamilySet.is_empty attack) in
   (if not exp_vulnerable then print_endline "Exponential ReDoS: false"
-  else
-    match get_exploit_string attack with
-    (* We cannot infer a printable exploit string. *)
-    | None -> print_endline "Exponential ReDoS: false"
-    (* We have a printable exploit string. *)
-    | Some exploit ->
-        print_endline "Exponential ReDoS: true";
-        (if !Options.show_lang then
-         (* Print the whole language. *)
-         let exp_vuln_string = Analysis.AttackFamilySet.to_string attack in
-         print_endline ("Exponential Vulnerabilities: " ^ exp_vuln_string));
-        print_exploit exploit);
+   else
+     match get_exploit_string attack with
+     (* We cannot infer a printable exploit string. *)
+     | None -> print_endline "Exponential ReDoS: false"
+     (* We have a printable exploit string. *)
+     | Some exploit ->
+         print_endline "Exponential ReDoS: true";
+         (if !Options.show_lang then
+            (* Print the whole language. *)
+            let exp_vuln_string = Analysis.AttackFamilySet.to_string attack in
+            print_endline ("Exponential Vulnerabilities: " ^ exp_vuln_string));
+         print_exploit exploit);
   print_runtime runtime
 
 (** [get_exploit_string attack] is an exploit string for [attack] such that
