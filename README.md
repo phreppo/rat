@@ -41,6 +41,16 @@ dune exec rat -- <args>
 Run with `--help` to print the help message.
 If there are no arguments, the command runs the interactive interpreter.
 
+To run `rat` inside Docker:
+
+``` bash
+# Build (you just need to do this once
+docker build . -t rat:latest
+
+# Example of running rat with arguments
+docker run rat:latest rat --regex '(a|a)*b'
+```
+
 ## Example Analysis
 
 Assume we have `rat` installed on the machine.
