@@ -23,7 +23,7 @@ The preprint PDF version is [here](https://parof.github.io/assets/pdfs/Parolini_
 ## Build, Install and Run
 
 To compile the project you need [opam](https://opam.ocaml.org/) installed, with
-a version of the OCaml compiler >= 4.13.0.
+a version of the OCaml compiler >= 4.08.0.
 
 ```bash
 make deps      # Install the dependencies.
@@ -44,7 +44,7 @@ If there are no arguments, the command runs the interactive interpreter.
 To run `rat` inside Docker:
 
 ``` bash
-# Build (you just need to do this once
+# Build (you just need to do this once)
 docker build . -t rat:latest
 
 # Example of running rat with arguments
@@ -112,6 +112,21 @@ difficult to read it.
 expressions, most notably *backreferences* and *lookarounds*.
 Some non-regular constructs, such as `$`, are supported in a limited form.
 Future improvements might fix this.
+
+## Benchmarking
+
+If you want to benchmark `rat` against other detectors, please use an OCaml
+switch with `flambda` enabled.
+For instance, this can be done with the following:
+```bash
+# Create a with with OCaml 4.14 and flambda.
+opam switch create 4.14.0+flambda --package=ocaml-variants.4.14.0+options,ocaml-option-flambda
+
+# Install dependencies, build, and install.
+make deps
+make
+make install
+```
 
 ## Authors
 
