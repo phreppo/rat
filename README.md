@@ -47,6 +47,9 @@ To run `rat` inside Docker:
 # Build (you just need to do this once)
 docker build . -t rat:latest
 
+# Run rat in interactive mode
+docker run -it rat:latest
+
 # Example of running rat with arguments
 docker run rat:latest rat --regex '(a|a)*b'
 ```
