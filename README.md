@@ -1,7 +1,7 @@
 
 # rat - ReDoS Abstract Tester 🐁
 
-![tests](https://github.com/parof/rat/actions/workflows/test.yml/badge.svg)
+![tests](https://github.com/phreppo/rat/actions/workflows/test.yml/badge.svg)
 
 <p align="center">
   <img src="img/example.png">
@@ -17,7 +17,7 @@ Furthermore, `rat` takes advantage of efficient data structures to be
 particularly fast.
 
 The paper is available [here](https://link.springer.com/chapter/10.1007/978-3-031-10363-6_6).
-The preprint PDF version is [here](https://parof.github.io/assets/pdfs/Parolini_ReDoS_Static_Analysis_Preprint.pdf).
+The preprint PDF version is [here](https://phreppo.github.io/assets/pdfs/Parolini_ReDoS_Static_Analysis_Preprint.pdf).
 
 
 > [!NOTE]
@@ -138,5 +138,5 @@ make install
 
 ## Authors
 
-- [Francesco Parolini](https://parof.github.io/)
+- [Francesco Parolini](https://phreppo.github.io/)
 - [Antoine Miné](https://www-apr.lip6.fr/~mine/)
