@@ -22,7 +22,7 @@ The preprint PDF version is [here](https://parof.github.io/assets/pdfs/Parolini_
 
 > [!NOTE]
 > `rat` now compiles to Javascript!
-> See the [example project](./example).
+> See the [example project](./js-example).
 
 ## Build, Install and Run
 
