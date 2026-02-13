@@ -523,16 +523,21 @@ let testable_extre = Alcotest.testable ExtRe.pp ExtRe.lang_eq
 
 let make_test ~semantics couple =
   let src, expected_attack_language = couple in
-  let regex = Parser.main Lexer.token (Lexing.from_string src) in
-  match ParserRe.to_re ~semantics regex with
+  match ParseRe.parse src with
   | Error e ->
-      ParserRe.report_conversion_error Format.err_formatter e;
+      ParseRe.report_parse_error Format.err_formatter e;
       Alcotest.fail "Parsing of regex was not supposed to fail"
-  | Ok regex ->
-      let attack_families = analyze regex in
-      let attack_lang = AttackFamilySet.to_lang attack_families in
-      Alcotest.test_case src `Quick (fun _ ->
-          Alcotest.check testable_extre src expected_attack_language attack_lang)
+  | Ok regex -> (
+      match ParserRe.to_re ~semantics regex with
+      | Error e ->
+          ParserRe.report_conversion_error Format.err_formatter e;
+          Alcotest.fail "Conversion of regex was not supposed to fail"
+      | Ok regex ->
+          let attack_families = analyze regex in
+          let attack_lang = AttackFamilySet.to_lang attack_families in
+          Alcotest.test_case src `Quick (fun _ ->
+              Alcotest.check testable_extre src expected_attack_language
+                attack_lang))
 
 let () =
   let open Alcotest in

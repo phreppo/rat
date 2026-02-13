@@ -1372,7 +1372,9 @@ module Make (S : SIG.STATE) (A : SIG.COMPARABLE) = struct
       | (p, id) :: q ->
           let trans, assoc, todo, finals =
             Algebra.fold
-              (fun l (trans, (assoc : (regexp list * state) list), todos, finals) ->
+              (fun l
+                   (trans, (assoc : (regexp list * state) list), todos, finals)
+                 ->
                 let x = derivate l p in
                 try
                   let xid = RWEQMap.find x assoc in

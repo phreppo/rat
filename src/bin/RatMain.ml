@@ -41,18 +41,6 @@ let rec main () =
   | None -> repl ()
   | Some regex -> run_analysis regex
 
-and parse source =
-  let lexbuf = Lexing.from_string source in
-  try Parser.main Lexer.token lexbuf
-  with exn ->
-    let curr = lexbuf.lex_curr_p in
-    let line = curr.pos_lnum in
-    let cnum = curr.pos_cnum - curr.pos_bol in
-    let tok = Lexing.lexeme lexbuf in
-    Printf.eprintf "Parse error: %s: line %d, column %d, token \"%s\"\n"
-      (Printexc.to_string exn) line cnum tok;
-    exit 1
-
 and repl _ =
   print_endline (Utility.yellow_str "~ rat's interactive mode ~");
   print_endline "Press Ctrl+D to exit\n";
@@ -72,15 +60,19 @@ and run_analysis source =
   parse_eval_print source
 
 and parse_eval_print source =
-  let regex = parse source in
-  match ParserRe.to_re ~semantics:!Options.semantics regex with
+  match ParseRe.parse source with
   | Error e ->
-      ParserRe.report_conversion_error Format.std_formatter e;
+      ParseRe.report_parse_error Format.std_formatter e;
       exit 1
   | Ok regex -> (
-      match analyze_with_timeout regex !Options.timeout with
-      | `Timeout -> print_endline "Analysis timeout expired."
-      | `Done (attack, runtime) -> print runtime attack)
+      match ParserRe.to_re ~semantics:!Options.semantics regex with
+      | Error e ->
+          ParserRe.report_conversion_error Format.std_formatter e;
+          exit 1
+      | Ok regex -> (
+          match analyze_with_timeout regex !Options.timeout with
+          | `Timeout -> print_endline "Analysis timeout expired."
+          | `Done (attack, runtime) -> print runtime attack))
 
 (** [analyze_with_timeout regex timeout] runs the analysis on [regex] with a
     timeout of [timeout] seconds. *)

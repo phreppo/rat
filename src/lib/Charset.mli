@@ -41,7 +41,8 @@ val underscore : t
 (** [underscore] is [{_}]. *)
 
 val word_chars : t
-(** [word_chars] is [uppercase_alpha ∪ lowercase_alpha ∪ underscore ∪ digits]. *)
+(** [word_chars] is [uppercase_alpha ∪ lowercase_alpha ∪ underscore ∪ digits].
+*)
 
 val spaces : t
 (** [spaces] is all space characters. *)

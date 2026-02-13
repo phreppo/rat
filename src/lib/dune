@@ -6,7 +6,8 @@
 
 (library
  (name rat)
- (libraries regularAutomata))
+ (libraries regularAutomata)
+ (private_modules Parser Lexer))
 
 (env
  (dev

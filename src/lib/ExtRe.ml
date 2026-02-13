@@ -204,7 +204,8 @@ module CharsetSet = struct
   let any_char_singleton = partition Charset.all_symbols
 end
 
-(** [derivative a re] is the derivative of [re] with respect to the symbols [a]. *)
+(** [derivative a re] is the derivative of [re] with respect to the symbols [a].
+*)
 let rec derivative a = function
   | Epsilon -> Empty
   | Char b -> if Charset.subset a b then Epsilon else Empty

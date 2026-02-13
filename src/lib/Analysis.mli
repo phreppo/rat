@@ -8,7 +8,8 @@ module AttackFamily : sig
   type t = { prefix : ExtRe.t; pump : ExtRe.t; suffix : ExtRe.t }
 end
 
-(** Is a string that can exploit a ReDoS vulnerability for a regular expression. *)
+(** Is a string that can exploit a ReDoS vulnerability for a regular expression.
+*)
 module ExploitString : sig
   type t
 

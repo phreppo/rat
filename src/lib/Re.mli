@@ -35,7 +35,8 @@ val star : ?expandible:bool -> t -> t
 (** {1 Utility} *)
 
 val head : t -> t
-(** [head re] is the first constructor in the top-level concatentaion of [re]. *)
+(** [head re] is the first constructor in the top-level concatentaion of [re].
+*)
 
 val tail : t -> t
 (** [tail re] is [re] without [head re]. *)
