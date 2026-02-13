@@ -31,3 +31,7 @@ setup.log
 
 # Local OPAM switch
 _opam/
+
+# Javascript
+node_modules/
+dist/

@@ -29,6 +29,10 @@ lock: ## Generate a lock file
 build: ## Build the project, including non installable libraries and executables
 	opam exec -- dune build --root .
 
+.PHONY: js
+js: ## Compile the library to JavaScript via js_of_ocaml
+	opam exec -- dune build --root . src/web/main.bc.js
+
 .PHONY: install
 install: all ## Install the packages on the system
 	opam exec -- dune install --root .

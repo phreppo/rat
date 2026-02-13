@@ -23,7 +23,9 @@
   dune
   (menhir
    (>= 2.1))
-  alcotest)
+  alcotest
+  js_of_ocaml
+  js_of_ocaml-ppx)
  (tags
   (ReDoS
    DoS

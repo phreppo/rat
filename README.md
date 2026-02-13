@@ -20,6 +20,10 @@ The paper is available [here](https://link.springer.com/chapter/10.1007/978-3-03
 The preprint PDF version is [here](https://parof.github.io/assets/pdfs/Parolini_ReDoS_Static_Analysis_Preprint.pdf).
 
 
+> [!NOTE]
+> `rat` now compiles to Javascript!
+> See the [example project](./example).
+
 ## Build, Install and Run
 
 To compile the project you need [opam](https://opam.ocaml.org/) installed, with
@@ -28,6 +32,7 @@ a version of the OCaml compiler >= 4.08.0.
 ```bash
 make deps      # Install the dependencies.
 make           # Build the project.
+make js        # Build with Javascript as target.
 make test      # Run the tests.
 make install   # Install the executable.
 ```

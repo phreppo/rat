@@ -20,6 +20,8 @@ depends: [
   "dune" {>= "2.7"}
   "menhir" {>= "2.1"}
   "alcotest"
+  "js_of_ocaml"
+  "js_of_ocaml-ppx"
   "odoc" {with-doc}
 ]
 build: [
