@@ -50,3 +50,9 @@ end
 val analyze : Re.t -> AttackFamilySet.t
 (** [analyze r] analyzes the regular expression [r] and returns the set of
     families that are dangerous for [r]. *)
+
+type redos_result = Safe | Dangerous | ParseError
+
+val has_redos : string -> redos_result
+(** [has_redos s] analyzes the regular expression [s] and returns if it is safe,
+    dangerous or if it is a regular expression that we cannot analyse. *)

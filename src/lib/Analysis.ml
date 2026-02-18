@@ -189,3 +189,15 @@ and exp_attack_rec_star pref suff r r1 =
   AttackFamilySet.union attack_family attack_e'
 
 let analyze r = exp_attack_families r
+
+type redos_result = Safe | Dangerous | ParseError
+
+let has_redos regex =
+  match ParseRe.parse regex with
+  | Error _ -> ParseError
+  | Ok regex -> (
+      match ParserRe.to_re ~semantics:Match regex with
+      | Error _ -> ParseError
+      | Ok regex ->
+          let attack = analyze regex in
+          if AttackFamilySet.is_empty attack then Safe else Dangerous)

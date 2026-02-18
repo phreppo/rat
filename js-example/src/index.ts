@@ -1,4 +1,5 @@
-const rat = require("../../_build/default/src/web/main.bc.js") as typeof import("./rat");
+import type { Rat, RedosResult } from "./rat";
+const rat: Rat = require("../../_build/default/src/web/main.bc.js");
 
 const regexes = [
   { source: "(a+)+$", label: "classic ReDoS" },
@@ -8,18 +9,7 @@ const regexes = [
 
 for (const { source, label } of regexes) {
   console.log(`--- ${label}: /${source}/ ---`);
-  const result = rat.analyze(source, "match");
-  if (result.error) {
-    console.log(`  Error: ${result.error}`);
-  } else if (result.vulnerable) {
-    console.log(`  Vulnerable!`);
-    console.log(`  Attack language: ${result.attackLanguage}`);
-    if (result.exploit) {
-      console.log(`  Exploit: ${result.exploit}`);
-      console.log(`  Example: ${result.example}`);
-    }
-  } else {
-    console.log(`  Safe`);
-  }
+  const result: RedosResult = rat.hasRedos(source);
+  console.log(`  ${result}`);
   console.log();
 }

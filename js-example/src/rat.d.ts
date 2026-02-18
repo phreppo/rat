@@ -1,14 +1,10 @@
-interface AnalyzeResult {
-  vulnerable?: boolean;
-  attackLanguage?: string;
-  exploit?: string;
-  example?: string;
-  error?: string;
-}
+/**
+ * Type definitions mirroring Analysis.has_redos
+ */
 
-interface Rat {
-  analyze(source: string, semantics: string): AnalyzeResult;
-}
+/** [has_redos s] returns Safe, Dangerous, or ParseError. */
+export type RedosResult = "Safe" | "Dangerous" | "ParseError";
 
-declare const rat: Rat;
-export = rat;
+export interface Rat {
+  hasRedos(source: string): RedosResult;
+}
