@@ -33,6 +33,12 @@ build: ## Build the project, including non installable libraries and executables
 js: ## Compile the library to JavaScript via js_of_ocaml
 	opam exec -- dune build --root . src/web/main.bc.js
 
+.PHONY: npm-dist
+npm-dist: js ## Build JS and copy to npm/dist/rat.js for publishing
+	@mkdir -p npm/dist
+	rm -f npm/dist/rat.js
+	cp _build/default/src/web/main.bc.js npm/dist/rat.js
+
 .PHONY: install
 install: all ## Install the packages on the system
 	opam exec -- dune install --root .

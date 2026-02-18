@@ -1,0 +1,27 @@
+{
+  "name": "rat-redos",
+  "version": "1.0.1",
+  "description": "ReDoS analyzer: check if a regex is vulnerable to regular expression denial of service",
+  "main": "dist/rat.js",
+  "types": "rat.d.ts",
+  "files": [
+    "dist",
+    "rat.d.ts",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "cd .. && make npm-dist",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "redos",
+    "regex",
+    "security",
+    "denial-of-service"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parof/rat.git"
+  }
+}

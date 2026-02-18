@@ -1,5 +1,5 @@
-import type { Rat, RedosResult } from "./rat";
-const rat: Rat = require("../../_build/default/src/web/main.bc.js");
+import type { Rat, RedosResult } from "rat-redos";
+const rat: Rat = require("rat-redos");
 
 const regexes = [
   { source: "(a+)+$", label: "classic ReDoS" },

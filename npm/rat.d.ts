@@ -1,10 +1,12 @@
 /**
- * Type definitions mirroring Analysis.has_redos
+ * Type definitions for rat-redos (ReDoS analyzer).
  */
 
-/** [has_redos s] returns Safe, Dangerous, or ParseError. */
 export type RedosResult = "Safe" | "Dangerous" | "ParseError";
 
 export interface Rat {
   hasRedos(source: string): RedosResult;
 }
+
+declare const rat: Rat;
+export default rat;

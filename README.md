@@ -136,6 +136,30 @@ make
 make install
 ```
 
+## NPM
+
+### Build
+
+From the **repository root** (requires OCaml and make):
+
+```bash
+make npm-dist
+```
+
+Or from the `npm` directory:
+
+```bash
+npm run build
+```
+
+### Publish on NPM
+
+1. Bump version in `npm/package.json` if needed.
+2. From repo root: `make npm-dist`
+5. `cd npm && npm publish --access public` (use `--access public` for a scoped package the first time).
+
+If you run `npm publish` from `npm/`, the `prepublishOnly` script will run `make npm-dist` automatically (you must have OCaml and the project built from the repo root).
+
 ## Authors
 
 - [Francesco Parolini](https://phreppo.github.io/)

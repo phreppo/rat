@@ -6,6 +6,9 @@
     "build": "tsc",
     "start": "npm run build && node dist/index.js"
   },
+  "dependencies": {
+    "rat-redos": "^1.0.0"
+  },
   "devDependencies": {
     "@types/node": "^25.2.3",
     "typescript": "^5.0.0"
