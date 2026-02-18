@@ -1,6 +1,6 @@
 {
   "name": "rat-redos",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "ReDoS analyzer: check if a regex is vulnerable to regular expression denial of service",
   "main": "dist/rat.js",
   "types": "rat.d.ts",
