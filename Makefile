@@ -39,6 +39,18 @@ npm-dist: js ## Build JS and copy to npm/dist/rat.js for publishing
 	rm -f npm/dist/rat.js
 	cp _build/default/src/web/main.bc.js npm/dist/rat.js
 
+.PHONY: web-build
+web-build: npm-dist ## Build the web interface engine and copy to web/ for local testing
+	cp npm/dist/rat.js web/rat.js
+
+.PHONY: web-dist
+web-dist: npm-dist ## Prepare the static site in public/ directory for deployment
+	@mkdir -p public
+	cp web/index.html public/
+	cp web/style.css public/
+	cp web/script.js public/
+	cp npm/dist/rat.js public/rat.js
+
 .PHONY: install
 install: all ## Install the packages on the system
 	opam exec -- dune install --root .

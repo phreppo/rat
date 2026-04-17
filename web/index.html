@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rat - ReDoS Abstract Tester 🐁</title>
+    <meta name="description" content="A sound tool to detect exponential Regular Expression Denial of Service (ReDoS) attacks.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>rat - ReDoS Abstract Tester 🐁</h1>
+        <p class="subtitle">A sound static analyzer for exponential ReDoS vulnerabilities.</p>
+    </header>
+
+    <main class="container">
+        <section class="input-group">
+            <label for="regex-input">Regular Expression:</label>
+            <input type="text" id="regex-input" placeholder="e.g. (a|a)*b" spellcheck="false" autocomplete="off">
+            <button id="analyze-btn">Analyze</button>
+        </section>
+
+        <section id="result">
+            <!-- Results will be injected here -->
+        </section>
+
+        <section class="examples">
+            <h3>Examples</h3>
+            <ul class="example-list" id="example-list">
+                <li>
+                    <span class="example-link" data-regex="(a|a)*b">(a|a)*b</span>
+                    <span class="example-desc">Classic ambiguous alternation (Dangerous)</span>
+                </li>
+                <li>
+                    <span class="example-link" data-regex="(a+)+$">(a+)+$</span>
+                    <span class="example-desc">Nested quantifiers (Dangerous)</span>
+                </li>
+                <li>
+                    <span class="example-link" data-regex="^(([a-z0-9_.-]+)@([a-z0-9.-]+)\.([a-z]{2,6}))?$">^(([a-z0-9_.-]+)@([a-z0-9.-]+)\.([a-z]{2,6}))?$</span>
+                    <span class="example-desc">Complex email regex (Safe)</span>
+                </li>
+                <li>
+                    <span class="example-link" data-regex="abc.*def">abc.*def</span>
+                    <span class="example-desc">Simple dot star (Safe)</span>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 ReDoS Abstract Tester. Built with OCaml and Javascript.</p>
+    </footer>
+
+    <!-- Load the compiled analyzer -->
+    <script src="rat.js"></script>
+    <!-- UI logic -->
+    <script src="script.js"></script>
+</body>
+</html>

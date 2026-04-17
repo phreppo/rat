@@ -35,3 +35,4 @@ _opam/
 # Javascript
 node_modules/
 dist/
+web/rat.js
