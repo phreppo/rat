@@ -19,6 +19,8 @@ particularly fast.
 The paper is available [here](https://link.springer.com/chapter/10.1007/978-3-031-10363-6_6).
 The preprint PDF version is [here](https://phreppo.github.io/assets/pdfs/Parolini_ReDoS_Static_Analysis_Preprint.pdf).
 
+🚀 **Try it out online!** [phreppo.github.io/rat](https://phreppo.github.io/rat/)
+
 🎉 `rat` is now available on `npm`! See the [example project](./js-example) written in Typescript.
 
 ## Build, Install and Run
